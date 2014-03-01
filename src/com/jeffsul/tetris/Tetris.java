@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+@SuppressWarnings("serial")
 public class Tetris extends JPanel implements ActionListener {	
-	private static final long serialVersionUID = 1L;
 	public static final int WIDTH = 200;
 	public static final int HEIGHT = 420;
 	
@@ -44,12 +44,18 @@ public class Tetris extends JPanel implements ActionListener {
 	
 	private String textBuffer;
 	private boolean microMode;
+
+	interface TetrisListener {
+		public void onScoreChange(int newScore);
+		public void onLevelChange(int newLevel);
+		public void onNextBlockChange(Block newBlock);
+	}
 	
-	private TetrisGame tetrisGame;
+	private TetrisListener listener;
 	
-	public Tetris(TetrisGame tg) {
+	public Tetris(TetrisListener listener) {
 		super();
-		tetrisGame = tg;
+		this.listener = listener;
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		
@@ -146,10 +152,10 @@ public class Tetris extends JPanel implements ActionListener {
 		blocks = new ArrayList<Block>();
 		score = 0;
 		level = 1;
-		tetrisGame.setScore(score);
-		tetrisGame.setLevel(level);
+		listener.onScoreChange(score);
+		listener.onLevelChange(level);
 		
-		speed = initialSpeed - (level-1) * 40;
+		speed = initialSpeed - (level - 1) * 40;
 		t.setDelay(speed);
 		t.start();
 		requestFocus();
@@ -192,7 +198,7 @@ public class Tetris extends JPanel implements ActionListener {
 				}
 				
 				setScore(level);
-				tetrisGame.setScore(score);
+				listener.onScoreChange(score);
 				
 				blocks.add(currBlock);
 				
@@ -211,7 +217,7 @@ public class Tetris extends JPanel implements ActionListener {
 	private void setNewBlock() {
 		currBlock = upcomingBlock;
 		upcomingBlock = new Block(this);
-		tetrisGame.setNextBlock(upcomingBlock);
+		listener.onNextBlockChange(upcomingBlock);
 	}
 	
 	private void render() {
@@ -299,11 +305,11 @@ public class Tetris extends JPanel implements ActionListener {
 	
 	private void setScore(int s) {
 		score += s;
-		tetrisGame.setScore(score);
+		listener.onScoreChange(score);
 		if (((double)score) / ((double)level * 100.0) >= level && level < 15) {
 			level++;
 			setDifficulty(initialSpeed - (level-1) * 40);
-			tetrisGame.setLevel(level);
+			listener.onLevelChange(level);
 		}	
 	}
 	

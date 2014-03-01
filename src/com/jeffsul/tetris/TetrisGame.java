@@ -19,18 +19,12 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class TetrisGame extends JFrame {	
 	private Tetris tetris;
-	
-	private JLabel scoreLbl;
-	private JLabel levelLbl;
-	private JPanel nextBlockPnl;
 
 	public TetrisGame() {
 		super("Jetris");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setLayout(new BorderLayout());
-		
-		tetris = new Tetris(this);
 		
 		JPanel titlePnl = new JPanel();
 		titlePnl.setBackground(Color.BLACK);
@@ -50,7 +44,7 @@ public class TetrisGame extends JFrame {
 		sidePnl1.setLayout(new BoxLayout(sidePnl1, BoxLayout.Y_AXIS));
 		JLabel nextBlockLbl = new JLabel("Next Block:");
 		sidePnl1.add(nextBlockLbl);
-		nextBlockPnl = new JPanel();
+		final JPanel nextBlockPnl = new JPanel();
 		sidePnl1.add(nextBlockPnl);
 		sidePnl.add(sidePnl1);
 		
@@ -79,33 +73,38 @@ public class TetrisGame extends JFrame {
 		});
 		scorePnl.add(pauseBtn);
 		
-		scoreLbl = new JLabel("Score: 0");
-		levelLbl = new JLabel("Level: 1");
+		final JLabel scoreLbl = new JLabel("Score: 0");
+		final JLabel levelLbl = new JLabel("Level: 1");
 		scorePnl.add(scoreLbl);
 		scorePnl.add(levelLbl);
 		sidePnl.add(scorePnl);
+		
+		tetris = new Tetris(new Tetris.TetrisListener() {
+			@Override
+			public void onScoreChange(int newScore) {
+				scoreLbl.setText("Score: " + newScore);
+			}
+
+			@Override
+			public void onLevelChange(int newLevel) {
+				levelLbl.setText("Level: " + newLevel);
+			}
+
+			@Override
+			public void onNextBlockChange(Block newBlock) {
+				Graphics g = nextBlockPnl.getGraphics();
+				g.setColor(Color.WHITE);
+				g.fillRect(0, 0, 100, 105);
+				newBlock.draw(g, true, tetris.isMicroMode());
+				g.dispose();
+			}
+		});
 		
 		add(sidePnl, BorderLayout.LINE_END);
 		add(tetris, BorderLayout.CENTER);
 		
 		pack();
 		setVisible(true);
-	}
-	
-	public void setNextBlock(Block b) {
-		Graphics g = nextBlockPnl.getGraphics();
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, 100, 105);
-		b.draw(g, true, tetris.isMicroMode());
-		g.dispose();
-	}
-	
-	public void setScore(int score) {
-		scoreLbl.setText("Score: " + score);
-	}
-	
-	public void setLevel(int level) {
-		levelLbl.setText("Level: " + level);
 	}
 	
 	public static void main(String[] args) {
