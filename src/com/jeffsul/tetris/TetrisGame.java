@@ -5,16 +5,14 @@ import java.awt.*;
 import java.awt.event.*;
 
 @SuppressWarnings("serial")
-public class TetrisGame extends JFrame
-{	
+public class TetrisGame extends JFrame {	
 	private Tetris tetris;
 	
 	private JLabel scoreLbl;
 	private JLabel levelLbl;
 	private JPanel nextBlockPnl;
 
-	public TetrisGame()
-	{
+	public TetrisGame() {
 		super("Jetris");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -48,27 +46,20 @@ public class TetrisGame extends JFrame
 		scorePnl.setLayout(new BoxLayout(scorePnl, BoxLayout.Y_AXIS));
 		
 		JButton newGameBtn = new JButton("New Game");
-		newGameBtn.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
+		newGameBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				tetris.startGame();
 			}
 		});
 		scorePnl.add(newGameBtn);
 		
 		final JButton pauseBtn = new JButton("Pause Game");
-		pauseBtn.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				if (pauseBtn.getText() == "Pause Game")
-				{
+		pauseBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (pauseBtn.getText() == "Pause Game") {
 					tetris.pause();
 					pauseBtn.setText("Resume Game");
-				}
-				else
-				{
+				} else {
 					tetris.resume();
 					pauseBtn.setText("Pause Game");
 				}
@@ -89,8 +80,7 @@ public class TetrisGame extends JFrame
 		setVisible(true);
 	}
 	
-	public void setNextBlock(Block b)
-	{
+	public void setNextBlock(Block b) {
 		Graphics g = nextBlockPnl.getGraphics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, 100, 105);
@@ -98,18 +88,15 @@ public class TetrisGame extends JFrame
 		g.dispose();
 	}
 	
-	public void setScore(int score)
-	{
+	public void setScore(int score) {
 		scoreLbl.setText("Score: " + score);
 	}
 	
-	public void setLevel(int level)
-	{
+	public void setLevel(int level) {
 		levelLbl.setText("Level: " + level);
 	}
 	
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		new TetrisGame();
 	}
 }
